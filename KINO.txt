@@ -1,0 +1,113 @@
+CREATE TABLE "Kino"(
+	"Id" UUID,
+	"Ime" VARCHAR(255) NOT NULL,
+	"Adresa" VARCHAR(255) NOT NULL,
+	"BrojTelefona" VARCHAR(255) NOT NULL,
+	PRIMARY KEY("Id")
+);
+
+
+CREATE TABLE "Dvorana"(
+	"Id" UUID,
+	"KinoId" UUID,
+	"BrojSjedala" INT NOT NULL,
+	PRIMARY KEY("Id"),
+	CONSTRAINT "FK_Dvorana_Kino_KinoId"
+	FOREIGN KEY("FK_Dvorana_Kino_KinoId")
+	REFERENCES "Kino"("Id")
+);
+
+
+CREATE TABLE "Prikazivanje"(
+	"Id" UUID ,
+	"VrijemePrikazivanja" TIMESTAMP ,
+	"FilmId" UUID NOT NULL,
+	"DvoranaId" UUID NOT NULL,
+	PRIMARY KEY("Id"),
+	CONSTRAINT "FK_Prikazivanje_Film_FilmId"
+	FOREIGN KEY("FK_Prikazivanje_Film_FilmId")
+	REFERENCES "Film"("Id")
+	CONSTRAINT "FK_Prikazivanje_Dvorana_DvoranaId"
+	FOREIGN KEY("FK_Prikazivanje_Dvorana_DvoranaId")
+	REFERENCES "Dvorana"("Id")
+);
+
+CREATE TABLE "Film"(
+	"Id" UUID,
+	"Naslov" VARCHAR(255) NOT NULL,
+	"Trajanje" INT NOT NULL,
+	PRIMARY KEY("Id")
+);
+
+CREATE TABLE "Ulaznica"(
+	"Id" UUID,
+	"PrikazivanjeId" UUID ,
+	"Cijena" INT NOT NULL,
+	"BrojMjesta" INT NOT NULL,
+	"KupacId" UUID,
+	PRIMARY KEY("Id"),
+	CONSTRAINT "FK_Ulaznica_Film_FilmId"
+	FOREIGN KEY("FK_Ulaznica_Film_FilmId")
+	REFERENCES "Prikazivanje"("Id"),
+	CONSTRAINT "FK_Ulaznica_Kupac_KupacId"
+	FOREIGN KEY("FK_Ulaznica_Kupac_KupacId")
+	REFERENCES "Kupac"("Id")
+);
+
+CREATE TABLE "Kupac"(
+	"Id" UUID,
+	"Ime" VARCHAR(255) NOT NULL,
+	PRIMARY KEY("Id")
+);
+
+CREATE TABLE "Žanr"(
+	"Id" UUID,
+	"Ime" VARCHAR(255) NOT NULL,
+	PRIMARY KEY("Id")
+);
+
+CREATE TABLE "FilmŽanr"(
+	"ŽanrId" UUID,
+	"FilmId" UUID,
+	CONSTRAINT "FK_FilmŽanr_Žanr_ŽanrId"
+	FOREIGN KEY("FK_FilmŽanr_Žanr_ŽanrId")
+	REFERENCES "Žanr"("Id"),
+	CONSTRAINT "FK_FilmŽanr_Film_FilmId"
+	FOREIGN KEY("FK_FilmŽanr_Film_FilmId")
+	REFERENCES "Film"("Id")
+);
+
+
+INSERT INTO "Film" ("Id","Naslov","Trajanje")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c80','The Crow', '120');
+INSERT INTO "Film" ("Id","Naslov","Trajanje")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c82','DeadPool', '150');
+INSERT INTO "Film" ("Id","Naslov","Trajanje")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c81','Beekeeper', '90');
+SELECT * FROM "Film"
+INSERT INTO "Kino" ("Id","Ime","Adresa","BrojTelefona")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c83','Cinestar', 'Svilajska','016396720');
+INSERT INTO "Kino" ("Id","Ime","Adresa","BrojTelefona")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c84','Cinestar2', 'Svilajska','016396721');
+INSERT INTO "Kino" ("Id","Ime","Adresa","BrojTelefona")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c85','Urania', 'Ul. Vjekoslava Hengla','016396722');
+INSERT INTO "Dvorana" ("Id","KinoId","BrojSjedala")
+VALUES ('a794d290-5738-4860-bc01-4f7fc6b50c86','a794d290-5738-4860-bc01-4f7fc6b50c83', '100');
+
+--DROP TABLE IF EXISTS "Kino";
+
+SELECT 
+  "Kino"."Id", 
+  "Kino"."Ime", 
+  "Kino"."Adresa", 
+  "Dvorana"."BrojSjedala"
+FROM 
+  "Kino" 
+  INNER JOIN "Dvorana" ON "Dvorana"."KinoId" = "Kino"."Id"
+ORDER BY 
+  "Adresa" ASC;
+  
+DELETE FROM "Film"
+WHERE "Film"."Trajanje"<100;
+
+SELECT * FROM "Film"
