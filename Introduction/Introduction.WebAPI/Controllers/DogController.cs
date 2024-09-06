@@ -7,6 +7,8 @@ namespace Introduction.WebAPI.Controllers
     public class DogController : ControllerBase
     {
 
+        //izmjena
+        //izmjena2
         static List<Dog> dogs = new List<Dog>();    
 
         [HttpPost]
